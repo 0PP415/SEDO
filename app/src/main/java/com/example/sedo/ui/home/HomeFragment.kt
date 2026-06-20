@@ -139,6 +139,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 putString("category", cloth.category)
                 putString("season", cloth.season)
                 putString("washGuide", cloth.washGuide)
+                putStringArrayList("tagSymbols", ArrayList(cloth.tagSymbols))
+
+                // 🔧 [원인 수정] ClosetFragment에는 있었지만 여기엔 빠져 있던 유튜브 4개 필드.
+                //    DetailFragment는 이 키가 없으면 그냥 "기본 세탁 가이드 1/2"로 떨어집니다.
+                putString("video1Id", cloth.video1Id)
+                putString("video2Id", cloth.video2Id)
+                putString("video1Title", cloth.video1Title)
+                putString("video2Title", cloth.video2Title)
             }
             findNavController().navigate(R.id.detailFragment, bundle)
         }
