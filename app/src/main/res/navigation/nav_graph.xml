@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.sedo.ui.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/previewFragment"
+        android:name="com.example.sedo.ui.home.PreviewFragment"
+        android:label="사진 확인"
+        tools:layout="@layout/fragment_preview" />
+
+    <fragment
+        android:id="@+id/analysisFragment"
+        android:name="com.example.sedo.ui.home.AnalysisFragment"
+        android:label="분석 중"
+        tools:layout="@layout/fragment_analysis" />
+
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.sedo.ui.home.ResultFragment"
+        android:label="분석 결과"
+        tools:layout="@layout/fragment_result" />
+
+    <fragment
+        android:id="@+id/saveFormFragment"
+        android:name="com.example.sedo.ui.home.SaveFormFragment"
+        android:label="옷 정보 확인"
+        tools:layout="@layout/fragment_save_form" />
+
+    <fragment
+        android:id="@+id/closetFragment"
+        android:name="com.example.sedo.ui.closet.ClosetFragment"
+        android:label="내 옷장"
+        tools:layout="@layout/fragment_closet" />
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.sedo.ui.closet.DetailFragment"
+        android:label="의류 상세 정보"
+        tools:layout="@layout/fragment_detail" />
+
+    <fragment
+        android:id="@+id/guideFragment"
+        android:name="com.example.sedo.ui.guide.GuideFragment"
+        android:label="가이드"
+        tools:layout="@layout/fragment_guide" />
+
+</navigation>
