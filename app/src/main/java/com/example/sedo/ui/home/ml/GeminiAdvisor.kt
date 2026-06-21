@@ -6,7 +6,6 @@ import com.google.ai.client.generativeai.type.content
 
 class GeminiAdvisor {
 
-    // ⭐️ 정답 획득! 가성비와 속도가 가장 뛰어난 최신 Flash 모델로 확정
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
         apiKey = BuildConfig.GEMINI_API_KEY

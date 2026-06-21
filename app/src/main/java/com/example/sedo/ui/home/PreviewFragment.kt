@@ -21,7 +21,6 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             currentImageUri = uri.toString()
-            // ⭐️ Glide 적용
             Glide.with(this)
                 .load(uri)
                 .into(binding.ivPreviewFull)
@@ -35,7 +34,6 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
         currentImageUri = arguments?.getString("imageUri")
 
         if (currentImageUri != null) {
-            // ⭐️ Glide 적용
             Glide.with(this)
                 .load(currentImageUri)
                 .into(binding.ivPreviewFull)
@@ -57,7 +55,6 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
         }
 
         binding.btnAnalyze.setOnClickListener {
-            // let을 사용하면 null이 아닐 때만 안전하게 안쪽 코드가 실행됩니다. (코틀린스러운 문법!)
             currentImageUri?.let { uri ->
                 val bundle = Bundle().apply { putString("imageUri", uri) }
                 findNavController().navigate(R.id.analysisFragment, bundle)

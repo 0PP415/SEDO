@@ -60,11 +60,10 @@ class AnalysisFragment : Fragment(R.layout.fragment_analysis) {
                     val finalGuide = geminiAdvisor.generateWashGuide(detectedSymbols, extractedText)
                     Log.d("SEDO_AI", "최종 AI 가이드:\n$finalGuide")
 
-                    // ⭐️ ID뿐만 아니라 Title 변수도 준비합니다. (통신 실패를 대비한 기본값)
-                    var video1Id: String? = "oM1d82x1K2E"
-                    var video2Id: String? = "hQe_f-kXYRk"
-                    var video1Title: String? = "의류 소재별 세탁 및 목 관리법"
-                    var video2Title: String? = "옷 오래 입는 세탁 주의사항"
+                    var video1Id: String? = "oWSEHGV_IMc"
+                    var video2Id: String? = "4LLnoEotPoI"
+                    var video1Title: String? = "아끼는 옷 오래 입자! 소재별 옷관리, 세탁 꿀팁까지 총정리!"
+                    var video2Title: String? = "드럼 세탁기 돌리는 방법 / 드럼세탁시 유의사항 / 드럼세탁기사용법"
 
                     try {
                         val keywordSection = finalGuide.substringAfter("[검색 키워드]", "").replace(":", "").trim()
@@ -77,10 +76,9 @@ class AnalysisFragment : Fragment(R.layout.fragment_analysis) {
                         val res1 = YouTubeClient.service.searchVideos(query = kw1, apiKey = youtubeKey).items.firstOrNull()
                         val res2 = YouTubeClient.service.searchVideos(query = kw2, apiKey = youtubeKey).items.firstOrNull()
 
-                        // ⭐️ 검색 결과가 있으면 진짜 ID와 '진짜 제목'으로 교체!
                         res1?.let {
                             video1Id = it.id.videoId ?: video1Id
-                            video1Title = it.snippet.title // 로그에만 찍던 걸 드디어 변수에 담습니다!
+                            video1Title = it.snippet.title
                         }
 
                         res2?.let {
@@ -104,7 +102,6 @@ class AnalysisFragment : Fragment(R.layout.fragment_analysis) {
                             val displayGuide = finalGuide.substringBefore("[검색 키워드]").trim()
                             putString("aiWashGuide", displayGuide)
 
-                            // ⭐️ 번들에 ID와 함께 '제목'도 꽉꽉 채워 넣습니다!
                             putString("video1Id", video1Id)
                             putString("video2Id", video2Id)
                             putString("video1Title", video1Title)

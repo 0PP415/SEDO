@@ -64,7 +64,6 @@ class ResultFragment : Fragment(R.layout.fragment_result) {
         val video1Id = arguments?.getString("video1Id") ?: "oM1d82x1K2E"
         val video2Id = arguments?.getString("video2Id") ?: "hQe_f-kXYRk"
 
-        // ⭐️ 하드코딩 제거! AnalysisFragment에서 보내준 진짜 제목을 꺼냅니다.
         val video1Title = arguments?.getString("video1Title") ?: "의류 소재별 세탁 및 목 관리법"
         val video2Title = arguments?.getString("video2Title") ?: "옷 오래 입는 세탁 주의사항"
 

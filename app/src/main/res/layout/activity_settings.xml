@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F6F8">
+
+    <!-- 상단 툴바 -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_settings"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FFFFFF"
+        app:title="설정"
+        android:elevation="2dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- [카테고리 1] 계정 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="내 계정"
+                android:textColor="#1A73E8"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/tv_settings_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SEDO 사용자"
+                    android:textColor="#212121"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내 옷장 및 세탁 데이터 관리"
+                    android:textColor="#757575"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- [카테고리 2] 일반 설정 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="일반"
+                android:textColor="#1A73E8"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:orientation="vertical">
+
+                <!-- 알림 설정 (페이크 UI) -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="세탁 알림 수신"
+                        android:textColor="#212121"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true"/>
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:checked="true"/>
+                </RelativeLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" android:layout_marginStart="20dp" android:layout_marginEnd="20dp"/>
+
+                <!-- 테마 설정 (페이크 UI) -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="다크 모드"
+                        android:textColor="#212121"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true"/>
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:checked="false"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- [카테고리 3] 앱 정보 (핵심: 이 부분을 누르면 Intent 발생!) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="지원"
+                android:textColor="#1A73E8"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/layout_go_to_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerVertical="true">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="어플리케이션 정보"
+                            android:textColor="#212121"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="버전, 개발자 정보 확인"
+                            android:textColor="#757575"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <!-- 화살표 아이콘 (안드로이드 기본 아이콘 활용) -->
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@android:drawable/ic_media_play"
+                        app:tint="#BDBDBD" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="40dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -7,8 +7,8 @@ interface WeatherService {
     // baseUrl 뒤에 붙을 세부 주소
     @GET("data/2.5/weather")
     suspend fun getCurrentWeather(
-        @Query("q") cityName: String,       // 도시 이름 (예: "Seoul" 또는 "Busan")
+        @Query("q") cityName: String,       // 도시 이름
         @Query("appid") apiKey: String,     // 발급받은 API 키
-        @Query("units") units: String = "metric" // 화씨 대신 섭씨(°C)로 받기 위해 고정
+        @Query("units") units: String = "metric" // 화씨 대신 섭씨(°C)로 받기
     ): WeatherResponse
 }

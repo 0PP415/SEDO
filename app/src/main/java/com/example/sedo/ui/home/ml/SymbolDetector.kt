@@ -14,7 +14,6 @@ class SymbolDetector(private val context: Context) {
 
     private var interpreter: Interpreter? = null
 
-    // ⭐️ yaml 파일에서 추출한 70개의 라벨을 코틀린 리스트로 하드코딩! (파일 IO 단축)
     private val labels = listOf(
         "ER_bleach", "ER_chlorine_bleach", "ER_dry_clean", "ER_dry_clean_chemical",
         "ER_dry_clean_chemical_mild", "ER_dry_clean_hydrocarbon", "ER_dry_clean_hydrocarbon_mild",
@@ -69,27 +68,22 @@ class SymbolDetector(private val context: Context) {
             inputBuffer.putFloat((pixel and 0xFF) / 255.0f)
         }
 
-        // ⭐️ 핵심 수정 부분: 모델이 알려준 진짜 크기 [1, 300, 6] 에 맞게 출력 그릇을 준비합니다!
         val outputArray = Array(1) { Array(300) { FloatArray(6) } }
 
         // 추론 실행
         tflite.run(inputBuffer, outputArray)
 
-        // 5. 결과 파싱 (함수 인자 타입도 변경됨)
         return parseNmsOutput(outputArray[0])
     }
 
-    // ⭐️ nms=True 형태에 맞춰 파싱하는 새로운 로직
     private fun parseNmsOutput(output: Array<FloatArray>): List<Detection> {
         val detections = mutableListOf<Detection>()
         val confidenceThreshold = 0.25f // 임계값 25%
 
-        // output은 300개의 박스를 담고 있습니다.
         for (i in 0 until 300) {
             val boxData = output[i]
 
             // 데이터 배열 규격: [x_center, y_center, width, height, confidence, class_id]
-            // YOLO 버전에 따라 [4]번이 정확도, [5]번이 라벨 인덱스인 경우가 일반적입니다.
             val confidence = boxData[4]
             val classIdFloat = boxData[5]
 
@@ -101,7 +95,7 @@ class SymbolDetector(private val context: Context) {
             }
         }
 
-        // 중복되는 세탁 기호를 제거 (예: 똑같은 아이콘이 두 개 찍혔을 경우 정확도 높은 것 하나만)
+        // 중복되는 세탁 기호를 제거
         return detections
             .groupBy { it.label }
             .map { it.value.maxByOrNull { d -> d.confidence }!! }
@@ -119,7 +113,6 @@ class SymbolDetector(private val context: Context) {
             var maxClassConf = 0f
             var maxClassId = -1
 
-            // 인덱스 4번부터 73번까지가 클래스별 정확도입니다.
             for (c in 0 until (numElements - 4)) {
                 val conf = output[c + 4][i]
                 if (conf > maxClassConf) {
@@ -134,7 +127,7 @@ class SymbolDetector(private val context: Context) {
             }
         }
 
-        // 중복 라벨 제거 (가장 정확도 높은 1개만 남김) 및 정렬
+        // 중복 라벨 제거 및 정렬
         return detections
             .groupBy { it.label }
             .map { it.value.maxByOrNull { d -> d.confidence }!! }

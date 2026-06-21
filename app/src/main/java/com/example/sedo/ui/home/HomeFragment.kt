@@ -34,7 +34,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var viewModel: ClosetViewModel
     private lateinit var recentAdapter: RecentClothesAdapter
 
-    // 1. 갤러리 결과 처리 런처
+    // 갤러리 결과 처리 런처
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let {
             val bundle = Bundle().apply { putString("imageUri", it.toString()) }
@@ -42,7 +42,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    // 2. 카메라 촬영 결과 처리 런처와 임시 사진 주소 보관용 변수
+    // 카메라 촬영 결과 처리 런처와 임시 사진 주소 보관용 변수
     private var cameraUri: Uri? = null
     private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success && cameraUri != null) {
@@ -111,16 +111,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupFragmentResultListeners() {
-        // 1. 저장 성공 후 돌아왔을 때 스낵바 띄우기
         setFragmentResultListener("save_request") { _, bundle ->
-            // ⭐️ 기존의 isSaved(Boolean) 대신 message(String)를 꺼냅니다!
             val message = bundle.getString("message")
             if (message != null) {
-                showSavedSnackBar(message) // 꺼낸 문구를 함수로 전달
+                showSavedSnackBar(message)
             }
         }
 
-        // 2. 옷장에서 + 버튼 누르고 돌아왔을 때 자동 실행 ➡️ 갤러리 직행이 아닌 선택 다이얼로그를 띄우도록 수정!
         setFragmentResultListener("auto_open_gallery") { _, bundle ->
             val autoOpen = bundle.getBoolean("autoOpen", false)
             if (autoOpen) {
@@ -133,7 +130,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // 어댑터 초기화 및 클릭 시 id를 포함한 번들 포장 연동
         recentAdapter = RecentClothesAdapter(emptyList()) { cloth ->
             val bundle = Bundle().apply {
-                putLong("id", cloth.id) // ⭐️ 수정/삭제 작업을 위해 고유 식별 번호 반드시 포함
+                putLong("id", cloth.id)
                 putString("name", cloth.name)
                 putString("imageUri", cloth.imageUri)
                 putString("category", cloth.category)
@@ -141,8 +138,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 putString("washGuide", cloth.washGuide)
                 putStringArrayList("tagSymbols", ArrayList(cloth.tagSymbols))
 
-                // 🔧 [원인 수정] ClosetFragment에는 있었지만 여기엔 빠져 있던 유튜브 4개 필드.
-                //    DetailFragment는 이 키가 없으면 그냥 "기본 세탁 가이드 1/2"로 떨어집니다.
                 putString("video1Id", cloth.video1Id)
                 putString("video2Id", cloth.video2Id)
                 putString("video1Title", cloth.video1Title)
@@ -170,7 +165,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    // ⭐️ 실시간 날씨 API 연동 로직으로 전면 수정!
     private fun checkWeatherCondition() {
         val myApiKey = BuildConfig.OPENWEATHER_API_KEY
         val city = "Busan"
@@ -180,15 +174,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 val response = WeatherClient.service.getCurrentWeather(city, myApiKey)
 
                 val currentTemp = response.main.temp.toInt()
-                val currentHumidity = response.main.humidity // ⭐️ 실시간 습도 파싱
+                val currentHumidity = response.main.humidity
                 val weatherDescription = response.weatherList.firstOrNull()?.description ?: "맑음"
                 val weatherState = response.weatherList.firstOrNull()?.mainState ?: "Clear"
 
-                // ⭐️ 1. 상단 큼직한 온습도 텍스트뷰 반영 ("22°C  |  습도 45%")
-                // 보내주신 XML의 ID인 tv_weather_temp와 정확히 매치시킵니다.
                 binding.tvWeatherTemp.text = "${currentTemp}°C  |  습도 ${currentHumidity}%"
 
-                // 2. 하단 스마트 세탁 지수 박스 반영
                 val laundryIndexText = when (weatherState) {
                     "Clear" -> "☀️ 세탁 지수: 아주 좋음!\n현재 기온은 ${currentTemp}°C이며, 빨래가 뽀송뽀송하게 잘 마르는 날씨예요."
                     "Clouds" -> "☁️ 세탁 지수: 보통\n현재 기온은 ${currentTemp}°C이며, 흐리지만 빨래를 돌리기엔 무난해요."
@@ -199,16 +190,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                // 에러 발생 시 UI 예외 처리
                 binding.tvWeatherTemp.text = "--°C  |  습도 --%"
                 binding.tvLaundryIndex.text = "⚠️ 날씨 정보를 불러오지 못했습니다.\n네트워크 연결 상태를 확인해 주세요."
             }
         }
     }
 
-    // 괄호 안에 message를 받도록 수정!
     private fun showSavedSnackBar(message: String) {
-        // 하드코딩 되어있던 문구를 매개변수 message로 교체
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
             .setAction("옷장 가기") {
                 val navOptions = NavOptions.Builder()

@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.etc.SettingsActivity" android:exported="false" />
+        <activity android:name=".ui.etc.AppInfoActivity" android:exported="false" />
     </application>
 
 </manifest>

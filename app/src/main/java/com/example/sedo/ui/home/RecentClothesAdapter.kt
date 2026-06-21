@@ -9,13 +9,12 @@ import com.example.sedo.databinding.ItemRecentClothBinding
 
 class RecentClothesAdapter(
     private var items: List<ClothEntity>,
-    private val onItemClick: (ClothEntity) -> Unit // ⭐️ 클릭 이벤트 콜백 추가!
+    private val onItemClick: (ClothEntity) -> Unit
 ) : RecyclerView.Adapter<RecentClothesAdapter.RecentViewHolder>() {
 
     inner class RecentViewHolder(private val binding: ItemRecentClothBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ClothEntity) {
 
-            // ⭐️ Glide 적용: 썸네일 크기로 알아서 최적화해서 넣어줍니다.
             Glide.with(binding.root.context)
                 .load(item.imageUri)
                 .centerCrop()
@@ -24,7 +23,6 @@ class RecentClothesAdapter(
             binding.tvRecentCategory.text = "${item.category} • ${item.season}"
             binding.tvRecentName.text = item.name
 
-            // ⭐️ 카드 클릭 시 상세 페이지로 이동하도록 밖으로 데이터 던지기
             binding.root.setOnClickListener {
                 onItemClick(item)
             }

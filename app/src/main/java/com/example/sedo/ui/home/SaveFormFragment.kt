@@ -26,7 +26,6 @@ class SaveFormFragment : Fragment(R.layout.fragment_save_form) {
     private var imageUri: String = ""
     private var tagSymbols: List<String> = emptyList()
 
-    // ⭐️ 데이터베이스로 보낼 유튜브 전역 데이터 저장소 준비
     private var video1Id: String = ""
     private var video2Id: String = ""
     private var video1Title: String = ""
@@ -46,7 +45,6 @@ class SaveFormFragment : Fragment(R.layout.fragment_save_form) {
         val category = arguments?.getString("category") ?: ""
         val season = arguments?.getString("season") ?: ""
 
-        // ⭐️ ResultFragment에서 넘어온 유튜브 데이터 안전하게 포획 (공백 차단)
         val v1 = arguments?.getString("video1Id")
         video1Id = if (v1.isNullOrBlank()) "oM1d82x1K2E" else v1
         val v2 = arguments?.getString("video2Id")
@@ -129,7 +127,6 @@ class SaveFormFragment : Fragment(R.layout.fragment_save_form) {
             binding.root.findViewById<com.google.android.material.chip.Chip>(seasonId).text.toString()
         } else "사계절"
 
-        // ⭐️ 4개의 고유 데이터 컬럼을 명확하게 꽂아줍니다!
         val clothEntity = ClothEntity(
             id = if (isEditMode) clothId else 0L,
             imageUri = imageUri,

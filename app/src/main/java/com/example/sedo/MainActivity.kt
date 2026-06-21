@@ -1,8 +1,10 @@
 package com.example.sedo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.example.sedo.databinding.ActivityMainBinding
 
@@ -12,17 +14,44 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 1. 뷰 바인딩 초기화 및 화면 표시
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. activity_main에 박아둔 네비게이션 호스트(액자)에서 컨트롤러(지도 조종사)를 꺼냅니다
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // 3. ⭐️ 핵심: 왼쪽 서랍장(navView)에 지도 조종사(navController)를 묶어줍니다
-        // 이제 메뉴를 누르면 ID를 비교해서 알아서 화면을 전환합니다!
         binding.navView.setupWithNavController(navController)
+
+        binding.navView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_settings -> {
+                    val intent = Intent(this, com.example.sedo.ui.etc.SettingsActivity::class.java).apply {
+                        putExtra("USER_NAME", "소설실 마스터")
+                    }
+                    startActivity(intent)
+
+                    binding.drawerLayout.closeDrawers()
+                    true
+                }
+                R.id.nav_info -> {
+                    val intent = Intent(this, com.example.sedo.ui.etc.AppInfoActivity::class.java).apply {
+                        putExtra("APP_VERSION", "v1.0.1 (Release)")
+                        putExtra("BUILD_DATE", "2026-06-22")
+                    }
+                    startActivity(intent)
+
+                    binding.drawerLayout.closeDrawers()
+                    true
+                }
+                else -> {
+                    val handled = NavigationUI.onNavDestinationSelected(item, navController)
+                    if (handled) {
+                        binding.drawerLayout.closeDrawers()
+                    }
+                    handled
+                }
+            }
+        }
     }
 }

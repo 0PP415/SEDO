@@ -70,10 +70,8 @@ class ClosetFragment : Fragment(R.layout.fragment_closet) {
 
         viewModel = ViewModelProvider(this)[ClosetViewModel::class.java]
 
-        // ClosetFragment.kt 의 onViewCreated 내부 어댑터 세팅 영역
         closetAdapter = DatabaseClosetAdapter(emptyList()) { cloth ->
 
-            // ⭐️ 기초 디버깅: DB에서 방금 꺼내온 Entity 객체의 뱃속을 직접 열어봅니다!
             android.util.Log.d("SEDO_TRACKING", "[1. 출발지] 클릭한 옷 이름: ${cloth.name}")
             android.util.Log.d("SEDO_TRACKING", "[1. 출발지] Entity가 가진 V1: ${cloth.video1Id}")
             android.util.Log.d("SEDO_TRACKING", "[1. 출발지] Entity가 가진 T1: ${cloth.video1Title}")
@@ -87,7 +85,6 @@ class ClosetFragment : Fragment(R.layout.fragment_closet) {
                 putString("washGuide", cloth.washGuide)
                 putStringArrayList("tagSymbols", ArrayList(cloth.tagSymbols))
 
-                // ⭐️ 핵심: DB에 저장된 진짜 유튜브 ID와 제목 4개를 번들에 실어 보냅니다.
                 putString("video1Id", cloth.video1Id)
                 putString("video2Id", cloth.video2Id)
                 putString("video1Title", cloth.video1Title)
