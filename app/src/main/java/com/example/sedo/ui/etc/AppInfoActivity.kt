@@ -20,7 +20,7 @@ class AppInfoActivity : AppCompatActivity() {
         val appVersion = intent.getStringExtra("APP_VERSION") ?: "v1.0.0"
         val buildDate = intent.getStringExtra("BUILD_DATE") ?: "2026-06-20"
 
-        //  UI에 수신한 데이터 바인딩
+        //  수신한 데이터 바인딩
         val tvVersionInfo = findViewById<TextView>(R.id.tv_version_info)
         val tvBuildDate = findViewById<TextView>(R.id.tv_build_date)
 

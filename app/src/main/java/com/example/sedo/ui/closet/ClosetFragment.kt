@@ -72,10 +72,6 @@ class ClosetFragment : Fragment(R.layout.fragment_closet) {
 
         closetAdapter = DatabaseClosetAdapter(emptyList()) { cloth ->
 
-            android.util.Log.d("SEDO_TRACKING", "[1. 출발지] 클릭한 옷 이름: ${cloth.name}")
-            android.util.Log.d("SEDO_TRACKING", "[1. 출발지] Entity가 가진 V1: ${cloth.video1Id}")
-            android.util.Log.d("SEDO_TRACKING", "[1. 출발지] Entity가 가진 T1: ${cloth.video1Title}")
-
             val bundle = Bundle().apply {
                 putLong("id", cloth.id)
                 putString("name", cloth.name)

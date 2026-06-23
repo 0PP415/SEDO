@@ -32,7 +32,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         _binding = FragmentDetailBinding.bind(view)
         viewModel = ViewModelProvider(this)[ClosetViewModel::class.java]
 
-        // 기본 의류 데이터 수신
+        // 의류 데이터 수신
         val clothId = arguments?.getLong("id", 0L) ?: 0L
         val name = arguments?.getString("name") ?: ""
         val imageUri = arguments?.getString("imageUri") ?: ""
@@ -66,7 +66,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         binding.toolbarDetail.setNavigationOnClickListener { findNavController().popBackStack() }
 
-        // 세탁 기호 뱃지 동적 생성
+        // 세탁 기호 뱃지 생성
         val displayTags = tagSymbols.ifEmpty { listOf("ER_no_tumble_dry", "ER_wash_40") }
         setupDynamicBadges(displayTags)
 

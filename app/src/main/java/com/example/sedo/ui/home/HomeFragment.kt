@@ -42,7 +42,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    // 카메라 촬영 결과 처리 런처와 임시 사진 주소 보관용 변수
+    // 카메라 촬영 결과 처리 런처, 임시 사진 주소 보관용 변수
     private var cameraUri: Uri? = null
     private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success && cameraUri != null) {
@@ -67,7 +67,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     // 사진 추가 방식 선택 다이얼로그
     private fun showImageSourceDialog() {
-        val options = arrayOf("📸 카메라로 촬영", "🖼️ 갤러리에서 선택")
+        val options = arrayOf("카메라로 촬영", "갤러리에서 선택")
         AlertDialog.Builder(requireContext())
             .setTitle("옷 사진 추가하기")
             .setItems(options) { _, which ->
@@ -84,7 +84,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    // 권한 없이 카메라를 실행하는 코드 (MediaStore 활용)
+    // 카메라 열기
     private fun openCamera() {
         val values = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "sedo_cloth_${System.currentTimeMillis()}.jpg")
@@ -127,7 +127,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupRecyclerView() {
-        // 어댑터 초기화 및 클릭 시 id를 포함한 번들 포장 연동
         recentAdapter = RecentClothesAdapter(emptyList()) { cloth ->
             val bundle = Bundle().apply {
                 putLong("id", cloth.id)

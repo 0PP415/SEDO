@@ -177,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
-                    android:lines="4"
+                    android:lines="12"
                     android:gravity="top"
                     android:lineSpacingExtra="6dp"
                     android:textColor="#333333"

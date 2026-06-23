@@ -13,9 +13,9 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        // 툴바 세팅 (뒤로가기 버튼)
+        // 뒤로가기 버튼
         val toolbar = findViewById<Toolbar>(R.id.toolbar_settings)
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert) // 기본 뒤로가기 화살표
+        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert)
         toolbar.setNavigationOnClickListener { finish() }
 
         // Intent 수신
@@ -26,7 +26,6 @@ class SettingsActivity : AppCompatActivity() {
         // Intent 송신
         val layoutAppInfo = findViewById<RelativeLayout>(R.id.layout_go_to_info)
         layoutAppInfo.setOnClickListener {
-            // Intent를 활용한 데이터 전달
             val infoIntent = Intent(this, AppInfoActivity::class.java).apply {
                 putExtra("APP_VERSION", "v1.0.1 (Release)")
                 putExtra("BUILD_DATE", "2026-06-21")

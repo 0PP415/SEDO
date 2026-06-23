@@ -85,13 +85,8 @@ class AnalysisFragment : Fragment(R.layout.fragment_analysis) {
                             video2Id = it.id.videoId ?: video2Id
                             video2Title = it.snippet.title
                         }
-
-                        Log.d("SEDO_YOUTUBE", "1번 키워드($kw1) 결과: $video1Title")
-                        Log.d("SEDO_YOUTUBE", "2번 키워드($kw2) 결과: $video2Title")
-
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        Log.e("SEDO_AI", "유튜브 통신/파싱 에러")
                     }
 
                     withContext(Dispatchers.Main) {
