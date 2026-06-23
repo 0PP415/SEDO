@@ -1,6 +1,10 @@
 package com.example.sedo.ui.home
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -8,6 +12,7 @@ import android.view.View
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -18,11 +23,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sedo.BuildConfig
 import com.example.sedo.R
 import com.example.sedo.databinding.FragmentHomeBinding
-import com.example.sedo.BuildConfig
 import com.example.sedo.ui.ClosetViewModel
 import com.example.sedo.ui.home.weather.WeatherClient
+import com.example.sedo.ui.home.weather.WeatherResponse
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -33,6 +41,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var viewModel: ClosetViewModel
     private lateinit var recentAdapter: RecentClothesAdapter
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     // 갤러리 결과 처리 런처
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -51,21 +61,110 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+            fetchLocationAndWeather() // 권한 허용됨 -> 내 위치 찾기
+        } else {
+            fetchWeatherByCity("Seoul") // 권한 거절됨 -> 서울 날씨 띄우기
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
         viewModel = ViewModelProvider(this)[ClosetViewModel::class.java]
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        checkLocationPermission()
+
         setupRecyclerView()
         setupToolbarWithNavigation()
         setupClickListeners()
         setupFragmentResultListeners()
         observeRecentClothes()
-        checkWeatherCondition()
     }
 
-    // 사진 추가 방식 선택 다이얼로그
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fetchLocationAndWeather() // 이미 허용되어 있음
+        } else {
+            // 권한 팝업 띄우기
+            requestPermissionLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun fetchLocationAndWeather() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    fetchWeatherByCoordinates(location.latitude, location.longitude)
+                } else {
+                    fetchWeatherByCity("Seoul")
+                }
+            }
+            .addOnFailureListener {
+                fetchWeatherByCity("Seoul")
+            }
+    }
+
+    private fun fetchWeatherByCoordinates(lat: Double, lon: Double) {
+        val myApiKey = BuildConfig.OPENWEATHER_API_KEY
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = WeatherClient.service.getWeatherByLocation(lat, lon, myApiKey)
+                updateWeatherUI(response)
+            } catch (e: Exception) {
+                fetchWeatherByCity("Seoul")
+            }
+        }
+    }
+
+    private fun fetchWeatherByCity(city: String) {
+        val myApiKey = BuildConfig.OPENWEATHER_API_KEY
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = WeatherClient.service.getCurrentWeather(city, myApiKey)
+                updateWeatherUI(response)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                binding.tvWeatherTemp.text = "--°C  |  습도 --%"
+                binding.tvLaundryIndex.text = "⚠️ 날씨 정보를 불러오지 못했습니다.\n네트워크 연결 상태를 확인해 주세요."
+            }
+        }
+    }
+
+    private fun updateWeatherUI(response: WeatherResponse) {
+        try {
+            val currentTemp = response.main.temp.toInt()
+            val currentHumidity = response.main.humidity
+            val weatherDescription = response.weatherList.firstOrNull()?.description ?: "맑음"
+            val weatherState = response.weatherList.firstOrNull()?.mainState ?: "Clear"
+
+            binding.tvWeatherTemp.text = "${currentTemp}°C  |  습도 ${currentHumidity}%"
+
+            val laundryIndexText = when (weatherState) {
+                "Clear" -> "☀️ 세탁 지수: 아주 좋음!\n현재 기온은 ${currentTemp}°C이며, 빨래가 뽀송뽀송하게 잘 마르는 날씨예요."
+                "Clouds" -> "☁️ 세탁 지수: 보통\n현재 기온은 ${currentTemp}°C이며, 흐리지만 빨래를 돌리기엔 무난해요."
+                "Rain", "Drizzle", "Thunderstorm" -> "🌧️ 세탁 지수: 나쁨!\n비가 오고 있으니 실내 건조나 건조기 사용을 권장해요."
+                else -> "🌈 현재 날씨: $weatherDescription (${currentTemp}°C)\n오늘도 즐거운 하루 되세요!"
+            }
+            binding.tvLaundryIndex.text = laundryIndexText
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            binding.tvWeatherTemp.text = "--°C  |  습도 --%"
+            binding.tvLaundryIndex.text = "⚠️ 날씨 정보를 불러오지 못했습니다."
+        }
+    }
+
     private fun showImageSourceDialog() {
         val options = arrayOf("카메라로 촬영", "갤러리에서 선택")
         AlertDialog.Builder(requireContext())
@@ -79,12 +178,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             .show()
     }
 
-    // 갤러리 열기 분리
     private fun openGallery() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    // 카메라 열기
     private fun openCamera() {
         val values = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "sedo_cloth_${System.currentTimeMillis()}.jpg")
@@ -160,37 +257,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     binding.rvRecentClothes.visibility = View.VISIBLE
                     recentAdapter.updateItems(clothesList.take(5))
                 }
-            }
-        }
-    }
-
-    private fun checkWeatherCondition() {
-        val myApiKey = BuildConfig.OPENWEATHER_API_KEY
-        val city = "Busan"
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val response = WeatherClient.service.getCurrentWeather(city, myApiKey)
-
-                val currentTemp = response.main.temp.toInt()
-                val currentHumidity = response.main.humidity
-                val weatherDescription = response.weatherList.firstOrNull()?.description ?: "맑음"
-                val weatherState = response.weatherList.firstOrNull()?.mainState ?: "Clear"
-
-                binding.tvWeatherTemp.text = "${currentTemp}°C  |  습도 ${currentHumidity}%"
-
-                val laundryIndexText = when (weatherState) {
-                    "Clear" -> "☀️ 세탁 지수: 아주 좋음!\n현재 기온은 ${currentTemp}°C이며, 빨래가 뽀송뽀송하게 잘 마르는 날씨예요."
-                    "Clouds" -> "☁️ 세탁 지수: 보통\n현재 기온은 ${currentTemp}°C이며, 흐리지만 빨래를 돌리기엔 무난해요."
-                    "Rain", "Drizzle", "Thunderstorm" -> "🌧️ 세탁 지수: 나쁨!\n비가 오고 있으니 실내 건조나 건조기 사용을 권장해요."
-                    else -> "🌈 현재 날씨: $weatherDescription (${currentTemp}°C)\n오늘도 즐거운 하루 되세요!"
-                }
-                binding.tvLaundryIndex.text = laundryIndexText
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                binding.tvWeatherTemp.text = "--°C  |  습도 --%"
-                binding.tvLaundryIndex.text = "⚠️ 날씨 정보를 불러오지 못했습니다.\n네트워크 연결 상태를 확인해 주세요."
             }
         }
     }

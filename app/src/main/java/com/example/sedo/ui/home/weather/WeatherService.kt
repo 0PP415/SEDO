@@ -10,4 +10,13 @@ interface WeatherService {
         @Query("appid") apiKey: String,     // 발급받은 API 키
         @Query("units") units: String = "metric" // 화씨 대신 섭씨
     ): WeatherResponse
+
+    @GET("weather")
+    suspend fun getWeatherByLocation(
+        @Query("lat") lat: Double, // 위도
+        @Query("lon") lon: Double, // 경도
+        @Query("appid") apiKey: String,
+        @Query("units") units: String = "metric",
+        @Query("lang") lang: String = "kr"
+    ): WeatherResponse
 }

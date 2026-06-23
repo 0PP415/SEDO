@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#F5F6F8">
 
-    <!-- 상단 툴바 -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_settings"
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- [카테고리 1] 계정 -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +58,6 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
 
-            <!-- [카테고리 2] 일반 설정 -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,7 +75,6 @@
                 android:background="#FFFFFF"
                 android:orientation="vertical">
 
-                <!-- 알림 설정 (페이크 UI) -->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -93,6 +89,7 @@
                         android:textSize="16sp"
                         android:layout_centerVertical="true"/>
                     <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switch_notifications"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -102,7 +99,6 @@
 
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" android:layout_marginStart="20dp" android:layout_marginEnd="20dp"/>
 
-                <!-- 테마 설정 (페이크 UI) -->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,6 +113,7 @@
                         android:textSize="16sp"
                         android:layout_centerVertical="true"/>
                     <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switch_dark_mode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -125,7 +122,6 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <!-- [카테고리 3] 앱 정보 (핵심: 이 부분을 누르면 Intent 발생!) -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -172,7 +168,6 @@
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
 
-                    <!-- 화살표 아이콘 (안드로이드 기본 아이콘 활용) -->
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"

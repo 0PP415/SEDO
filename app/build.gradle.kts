@@ -79,24 +79,24 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 
-    // [1] Coroutine (비동기 처리 - 20점)
+    // Coroutine (비동기 처리 - 20점)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // [2] Retrofit2 & Gson (API 통신 - 60점 달성용)
+    // Retrofit2 & Gson (API 통신 - 60점 달성용)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    // [3] Glide (이미지 로딩 - 다운로드 매니저 20점)
+    // Glide (이미지 로딩 - 다운로드 매니저 20점)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     ksp("com.github.bumptech.glide:compiler:4.16.0")
 
-    // [4] Room DB (내 옷장 데이터 관리용)
+    // Room DB (내 옷장 데이터 관리용)
     val roomVersion = "2.7.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion") // Coroutine 지원용
     ksp("androidx.room:room-compiler:$roomVersion")
 
-    // [5] Jetpack Navigation & ViewModel (Jetpack 30점)
+    // Jetpack Navigation & ViewModel (Jetpack 30점)
     val navVersion = "2.7.7"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
@@ -115,4 +115,7 @@ dependencies {
 
     // 뱃지 자동 줄바꿈을 위한 Flexbox
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+    // GPS 위치 정보 가져오기
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 }
